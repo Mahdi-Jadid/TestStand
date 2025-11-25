@@ -1,0 +1,75 @@
+#pragma once
+
+#include <PID_v1.h>
+#include <current_module.h>
+#include <esc_module.h>
+#include <battery_module.h>
+#include <load_cell_module.h>
+
+
+class Stand_PID {
+
+    public: 
+
+        Stand_PID(double Kp, double Ki, double Kd);
+
+        void start(Stand_ACS* stand_acs);
+
+        void reset_bools();
+        
+        void set_setpoint(double setpoint);
+
+        void pid_logic(Stand_ESC* stand_esc, Stand_ACS* stand_acs, Stand_Loadcell* stand_loadcell);
+
+        float update_windowed_average(float new_value);
+
+        void set_setpoint_from_serial();
+
+        void update_time();
+
+        void csv_log(unsigned long max_log_count = 0);
+
+        private:
+
+            void update_current_stats(Stand_ACS* stand_acs);
+
+            double current_input; 
+            double current_output;
+            double current_setpoint;
+
+            PID current_pid;
+
+           // ---------- Moving-average filter (0.5 s at 10 Hz = 5 samples) ----------
+                static constexpr uint8_t WINDOW_SIZE = 5;
+                float values_in_window[WINDOW_SIZE] = {};   // zero-initialize
+                uint8_t window_index = 0;
+                uint8_t window_count = 0;
+                float window_sum = 0.0f;
+
+                // ---------- Locking (value seeker) ----------
+                bool pwmLocked = false;
+                int lockedAngle = ESC_MIN_ANGLE;
+                uint8_t nearCount = 0;
+
+                // fast coarse seek before PID
+                bool preSeek = true;     // NEW: fast ramp phase flag
+
+                unsigned long now_ms = 0;
+
+                // ---------- Penalty integration ----------
+                double penalty_integral = 0.0;
+                double penalty_points = 0.0;
+                const float PENALTY_COEFFICIENT;
+                const float LOOP_DT;   // 10 Hz loop (100 ms)
+
+                float current_instant = 0.0f;
+                float current_windowed_average = 0.0f;
+                float current_long_time_average = 0.0f;
+
+                float loadcell_thrust = 0.0f;
+
+                unsigned long log_count = 0;
+
+                const int BUZZER_PIN;
+};
+
