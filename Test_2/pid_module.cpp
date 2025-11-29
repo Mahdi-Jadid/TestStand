@@ -171,7 +171,7 @@ void Stand_PID::csv_log(unsigned long max_log_count) {
     }
 
   // 5) CSV log:
-  
+
   if (pwmLocked) {
    Serial.print(now_ms);
   Serial.print(", ");
@@ -182,19 +182,53 @@ void Stand_PID::csv_log(unsigned long max_log_count) {
   Serial.print(current_windowed_average, 3);
   Serial.print(", ");
   Serial.print(current_long_time_average, 3);
- // Serial.print(", ");
-  //Serial.print(current_setpoint, 3);
-  //Serial.print(", ");
- // Serial.print( pwmLocked ? 1 : 0);
-  //Serial.print(", ");
-  //Serial.print(penalty_points, 3);
+  Serial.print(", ");
+  Serial.print(current_setpoint, 3);
+  Serial.print(", ");
+  Serial.print( pwmLocked ? 1 : 0);
+  Serial.print(", ");
+  Serial.print(penalty_points, 3);
 
-    // Serial.print(", ");
-    // Serial.print(loadcell_thrust, 2);
+     Serial.print(", ");
+     Serial.print(loadcell_thrust, 2);
      log_count++;
   }
 
   Serial.println();
+
+
+}
+
+void Stand_PID::csv_log(Stand_Battery* battery) {
+
+  // 5) CSV log:
+
+  auto voltage = battery->read_voltage();
+  auto percent = battery->percentage_4S(voltage); 
+  if (pwmLocked) {
+   Serial.print(now_ms);
+  Serial.print(", ");
+  Serial.print(battery);
+  Serial.print(", ");
+   Serial.print(current_instant, 3);
+  Serial.print(", ");
+  Serial.print(current_windowed_average, 3);
+  Serial.print(", ");
+  Serial.print(current_long_time_average, 3);
+  Serial.print(", ");
+  Serial.print(current_setpoint, 3);
+  Serial.print(", ");
+  Serial.print( pwmLocked ? 1 : 0);
+  Serial.print(", ");
+  Serial.print(penalty_points, 3);
+
+     Serial.print(", ");
+     Serial.print(loadcell_thrust, 2);
+  }
+
+  Serial.println();
+
+
 
 
 }

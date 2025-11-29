@@ -11,6 +11,7 @@
 
 Stand_ESC stand_esc(9);
 Stand_ACS stand_acs(A1, ACS712_30A);
+Stand_Battery stand_battery(A0, 220, 100);
 
  // Tuning
         double Kp = 1.9; // 1.8
@@ -38,7 +39,7 @@ void setup()
 
   stand_pid.start(&stand_acs);
 
-  stand_pid.set_setpoint(1.5);
+  stand_pid.set_setpoint(15);
 
   Serial.println("Ready.");
   
@@ -51,14 +52,7 @@ void loop() {
 
   stand_loadcell.update();
 
-  if (!stand_pid.is_locked()) {
-    Serial.println();
-    Serial.print(stand_pid.current_windowed_average);
-    Serial.print(", ");
-    Serial.print(stand_esc.get_throttle_angle());
-    Serial.println();
-  }
-  stand_pid.csv_log(250UL);
+  stand_pid.csv_log(&stand_battery);
 
   delay(100);
 }
