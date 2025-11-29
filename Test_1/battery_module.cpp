@@ -1,13 +1,13 @@
-#include <battery_module.h>
+#include "battery_module.h"
 
-Stand_Battery::Stand_Battery(int analog_pin, float r1, float r2): R1{r1}, R2{r2} {}
+Stand_Battery::Stand_Battery(int analog_pin, float r1, float r2): R1{r1 * 1000}, R2{r2 * 1000}, BATTERY_ANALOG_PIN{analog_pin} {}
 
 float Stand_Battery::read_voltage(int samples = 20) {
   long sum = 0;
 
   // Take multiple ADC readings
   for (int i = 0; i < samples; i++) {
-    sum += analogRead(VOLTAGE_PIN);
+    sum += analogRead(BATTERY_ANALOG_PIN);
     delay(2);  // small delay for ADC stability
   }
 

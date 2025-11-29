@@ -29,7 +29,7 @@ class Stand_ACS {
             float get_max_current();
 
             // Reset max current (and other fields if needed)
-            float reset_when_entered(char r = 'r', char inByte);
+            float reset_when_entered(char r, char inByte);
 
 
         private:

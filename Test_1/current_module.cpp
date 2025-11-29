@@ -1,7 +1,7 @@
 #include "current_module.h"
 
 
-Stand_ACS::Stand_ACS(uint8_t analog_pin, float type): ANALOG_PIN{analog_pin}, TYPE{type}, max_current(0.0f), ACS(ANALOG_PIN, V_REF_UNO, ADC_STEPS_UNO, TYPE) {}
+Stand_ACS::Stand_ACS(uint8_t analog_pin = A1, float type = ACS712_30A): ANALOG_PIN{analog_pin}, TYPE{type}, max_current(0.0f), ACS(ANALOG_PIN, V_REF_UNO, ADC_STEPS_UNO, TYPE) {}
 
 void Stand_ACS::start() {
     ACS.autoMidPoint();
@@ -14,7 +14,7 @@ float Stand_ACS::get_current_instant() {
     return get_current_averaged(10);
 }
 
-float Stand_ACS::get_current_averaged(int sampling_size) {
+float Stand_ACS::get_current_averaged(int sampling_size = 25) {
 
     long sum_mA = 0;
 

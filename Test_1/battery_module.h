@@ -1,4 +1,5 @@
 #pragma once
+#include <Arduino.h>
 
 class Stand_Battery {
 
@@ -15,7 +16,7 @@ class Stand_Battery {
             samples = how many analog readings to average.
             Returns the battery voltage in volts (20 by default)   */
 
-        float read_voltage(int samples);
+        float read_voltage(int samples = 20);
 
         /*
             Converts 4S battery voltage to an estimated state of charge percentage.
@@ -32,6 +33,7 @@ class Stand_Battery {
 
      const float R1;  // 220k ohm (high-side resistor)
      const float R2;  // 100k ohm (low-side resistor)
+     const float BATTERY_ANALOG_PIN;
 
 
 

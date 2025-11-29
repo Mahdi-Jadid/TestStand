@@ -7,15 +7,15 @@
 
 */
 
-#include <pid_module.h>
+#include "pid_module.h"
 
 Stand_ESC stand_esc(9);
 Stand_ACS stand_acs(A1, ACS712_30A);
 
  // Tuning
-        double Kp = 1.8;
-        double Ki = 2.2;
-        double Kd = 0.2;
+        double Kp = 1.9; // 1.8
+        double Ki = 2.5; // 2.2
+        double Kd = 0.2; // 0.2
 
        
 
@@ -38,13 +38,16 @@ void setup()
 
   stand_pid.start(&stand_acs);
 
-  stand_pid.set_setpoint(15.0);
+  stand_pid.set_setpoint(0.6);
 
   Serial.println("Ready.");
+  
 }
 
 // --------- Main loop ---------
 void loop() {  
+
+  
 
   stand_pid.update_time();
 
@@ -52,7 +55,14 @@ void loop() {
 
   stand_loadcell.update();
 
-  stand_pid.csv_log(1000UL);
+  if (!stand_pid.is_locked()) {
+    Serial.println();
+    Serial.print(stand_acs.get_current_instant());
+    Serial.print(", ");
+    Serial.print(stand_esc.get_throttle_angle());
+    Serial.println();
+  }
+  stand_pid.csv_log(250UL);
 
   delay(100);
 }

@@ -1,7 +1,8 @@
 #include "esc_module.h"
 
 
-Stand_ESC::Stand_ESC(int pin) : ATTACHMENT_PIN{pin}, esc_angle(ESC_MIN_ANGLE), started(false)  {}
+
+Stand_ESC::Stand_ESC(int pin = 9) : ATTACHMENT_PIN{pin}, esc_angle(ESC_MIN_ANGLE), started(false)  {}
 
 void Stand_ESC::start(bool calibration) {
 
@@ -66,8 +67,10 @@ void Stand_ESC::increment_throttle_when_entered(char i, char inByte) {
         ESC.write(i);
         delay(RAMP_DELAY_MS);
       }
-    }
 
+      Serial.println(esc_angle);
+    }
+  
 }   
 
 void Stand_ESC::decrement_throttle_when_entered(char d, char inByte) {
@@ -75,14 +78,15 @@ void Stand_ESC::decrement_throttle_when_entered(char d, char inByte) {
     if (inByte == d) {
       // decrease throttle
      esc_angle -= 10; 
-      if (val < 80) esc_angle= 80; 
+      if (esc_angle < 80) esc_angle= 80; 
       for (int i = esc_angle+ 9; i >= esc_angle; i--) {
         if (i < 80) break;
         ESC.write(i);
         delay(RAMP_DELAY_MS);
       }
-    } 
 
+      Serial.println(esc_angle);
+    } 
 }
 
 void Stand_ESC::stop_throttle_when_entered(char s, char inByte) {
@@ -94,6 +98,7 @@ void Stand_ESC::stop_throttle_when_entered(char s, char inByte) {
         delay(RAMP_DELAY_MS);
       }
      esc_angle= 80;
-    }
 
+     Serial.println(esc_angle);
+    }
 }

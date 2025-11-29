@@ -1,10 +1,10 @@
 #pragma once
 
 #include <PID_v1.h>
-#include <current_module.h>
-#include <esc_module.h>
-#include <battery_module.h>
-#include <load_cell_module.h>
+#include "current_module.h"
+#include "esc_module.h"
+#include "battery_module.h"
+#include "load_cell_module.h"
 
 
 class Stand_PID {
@@ -28,6 +28,8 @@ class Stand_PID {
         void update_time();
 
         void csv_log(unsigned long max_log_count = 0);
+
+        bool is_locked();
 
         private:
 

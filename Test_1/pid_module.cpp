@@ -1,4 +1,4 @@
-#include <pid_module.h>
+#include "pid_module.h"
 
 
 
@@ -61,8 +61,8 @@ void Stand_PID::pid_logic(Stand_ESC* stand_esc, Stand_ACS* stand_acs, Stand_Load
 
     if (preSeek) {
       // ramp up quickly until we're close to   current_setpoint using current_windowed_average
-      if (current_windowed_average < (  current_setpoint - 0.5))  // 0.5 A below target
-        stand_esc->increment_throttle_by(2);
+      if (current_windowed_average < (  current_setpoint - 0.10))  // 0.5 A below target
+        stand_esc->increment_throttle_by(5);
       
       else {
         // we're close enough, switch to PID fine control
@@ -166,12 +166,14 @@ void Stand_PID::csv_log(unsigned long max_log_count) {
 
   if (max_log_count != 0)
     if (log_count >= max_log_count && pwmLocked) {
-        digitalWrite(buzzer_pin, HIGH); // Buzzer will sound if data for one air speed is done logging and no further logs collected
+        digitalWrite(BUZZER_PIN, HIGH); // Buzzer will sound if data for one air speed is done logging and no further logs collected
         return;
      }
 
   // 5) CSV log:
-  Serial.print(now_ms);
+  
+  if (pwmLocked) {
+   Serial.print(now_ms);
   Serial.print(", ");
   Serial.print(lockedAngle);
   Serial.print(", ");
@@ -180,20 +182,23 @@ void Stand_PID::csv_log(unsigned long max_log_count) {
   Serial.print(current_windowed_average, 3);
   Serial.print(", ");
   Serial.print(current_long_time_average, 3);
-  Serial.print(", ");
-  Serial.print(current_setpoint, 3);
-  Serial.print(", ");
-  Serial.print( pwmLocked ? 1 : 0);
-  Serial.print(", ");
-  Serial.print(penalty_points, 3);
+ // Serial.print(", ");
+  //Serial.print(current_setpoint, 3);
+  //Serial.print(", ");
+ // Serial.print( pwmLocked ? 1 : 0);
+  //Serial.print(", ");
+  //Serial.print(penalty_points, 3);
 
-  if (pwmLocked) {
-     Serial.print(", ");
-     Serial.print(loadcell_thrust, 2);
-     log_count++
+    // Serial.print(", ");
+    // Serial.print(loadcell_thrust, 2);
+     log_count++;
   }
 
   Serial.println();
 
 
+}
+
+bool Stand_PID::is_locked() {
+  return pwmLocked;
 }

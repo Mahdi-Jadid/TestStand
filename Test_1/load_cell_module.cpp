@@ -1,4 +1,4 @@
-#include <load_cell_module.h>
+#include "load_cell_module.h"
 
 
 Stand_Loadcell::Stand_Loadcell(int DT, int SCK) : HX711_DT{DT}, HX711_SCK{SCK}, LoadCell(HX711_DT, HX711_SCK), calibration_value_eeprom_address(0) {}
@@ -36,6 +36,6 @@ void Stand_Loadcell::update() {
     
 }
  
-void Stand_Loadcell::get_thrust() {
+float Stand_Loadcell::get_thrust() {
     return thrust;
 }
