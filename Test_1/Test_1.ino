@@ -38,7 +38,7 @@ void setup()
 
   stand_pid.start(&stand_acs);
 
-  stand_pid.set_setpoint(1.5);
+  stand_pid.set_setpoint(1);
 
   Serial.println("Ready.");
   

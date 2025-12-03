@@ -66,12 +66,7 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
     }
     else {
 
-    //  if (current_windowed_average < (current_setpoint - 0.50)) {
-      //   preSeek = true;
-        // return;
-      //}
-        
-
+    
       current_input = (double)current_windowed_average;             // use 0.5 s avg for PID
       current_pid.Compute();
 
@@ -84,7 +79,7 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
 
       // lock when avg is just under current_setpoint
       if ( window_count == WINDOW_SIZE &&
-          current_windowed_average >= (current_setpoint - 0.05) &&
+          current_windowed_average >= (current_setpoint - 0.1) &&  // 0.05
           current_windowed_average <= current_setpoint)
       {
          nearCount++;
@@ -99,7 +94,7 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
     }
   }
   else {
-    if  (current_windowed_average < (current_setpoint - 0.05)) {  // 0.5 A below target
+    if  (current_windowed_average < (current_setpoint - 0.1)) {  // 0.05 
         pwmLocked = false;
         return;
     }

@@ -199,7 +199,7 @@ void Stand_PID::csv_log(unsigned long max_log_count) {
 
 }
 
-void Stand_PID::csv_log(Stand_Battery* battery) {
+void Stand_PID::csv_log(Stand_Battery * battery) {
 
   // 5) CSV log:
 
