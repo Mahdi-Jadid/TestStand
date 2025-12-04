@@ -57,7 +57,7 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
   else if (!pwmLocked) {
     // --------- FAST PRE-SEEK PHASE ---------
     if (preSeek) {
-      if (current_windowed_average < (current_setpoint - 0.50))  // 0.5 A below target
+      if (current_windowed_average < (current_setpoint - 0.20))  // 0.5 A below target
         stand_esc->increment_throttle_by(5);
       else {
          preSeek = false;
@@ -99,9 +99,9 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
     }
   }
   else {
-    if  (current_windowed_average < (current_setpoint - 0.05)) {  // 0.5 A below target
-        pwmLocked = false;
-        return;
+    if  (current_windowed_average < (current_setpoint - 0.05)) { 
+       pwmLocked = false;
+       return;
     }
 
     stand_esc->write(lockedAngle);

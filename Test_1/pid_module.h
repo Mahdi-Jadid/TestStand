@@ -42,7 +42,7 @@ float current_windowed_average = 0.0f;
             PID current_pid;
 
            // ---------- Moving-average filter (0.5 s at 10 Hz = 5 samples) ----------
-                static constexpr uint8_t WINDOW_SIZE = 10;
+                static constexpr uint8_t WINDOW_SIZE = 5;
                 float values_in_window[WINDOW_SIZE] = {};   // zero-initialize
                 uint8_t window_index = 0;
                 uint8_t window_count = 0;

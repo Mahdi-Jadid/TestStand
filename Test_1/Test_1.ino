@@ -13,12 +13,11 @@ Stand_ESC stand_esc(9);
 Stand_ACS stand_acs(A1, ACS712_30A);
 
  // Tuning
-        double Kp = 1.9; // 1.8
+        double Kp = 4.0; // 1.8
         double Ki = 2.5; // 2.2
         double Kd = 0.2; // 0.2
 
        
-
 Stand_PID stand_pid(Kp, Ki, Kd);
 
 Stand_Loadcell stand_loadcell;
@@ -38,7 +37,7 @@ void setup()
 
   stand_pid.start(&stand_acs);
 
-  stand_pid.set_setpoint(1.5);
+  stand_pid.set_setpoint(1);
 
   Serial.println("Ready.");
   
@@ -58,7 +57,7 @@ void loop() {
     Serial.print(stand_esc.get_throttle_angle());
     Serial.println();
   }
-  stand_pid.csv_log(250UL);
+  stand_pid.csv_log(2000UL);
 
   delay(100);
 }
