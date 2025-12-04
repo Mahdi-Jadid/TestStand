@@ -50,7 +50,7 @@ void loop() {
 
   stand_loadcell.update();
 
-  stand_pid.csv_log(1000UL);
+  stand_pid.csv_log(500UL);
 
   delay(100);
 }

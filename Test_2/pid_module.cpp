@@ -85,7 +85,7 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
         if ( nearCount >= 5) {   // 0.5 s near target 
           pwmLocked   = true;
           lockedAngle =  stand_esc->get_throttle_angle();
-          Serial.println("PWM locked for stable measurement.");
+         
         }
       }
       else
@@ -95,6 +95,7 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
   else {
     if  (current_windowed_average < (current_setpoint - 0.1)) { 
        pwmLocked = false;
+       digitalWrite(LED_PIN, LOW);
        if (max_log > 0)
           if (log_count >= max_log)
               log_count = 0;
@@ -204,13 +205,7 @@ void Stand_PID::csv_log(unsigned long max_log_count) {
 void Stand_PID::csv_log(Stand_Battery * battery) {
 
   // 5) CSV log:
-   max_log = max_log_count;
-
-  if (max_log_count != 0)
-    if (log_count >= max_log_count && pwmLocked) {
-        digitalWrite(LED_PIN, HIGH); 
-        return;
-    }
+ 
 
   auto voltage = battery->read_voltage();
   auto percent = battery->percentage_3S(voltage); 
@@ -247,12 +242,9 @@ void Stand_PID::csv_log(Stand_Battery * battery) {
  
   }
 
-  Serial.println();
 
 
 
-
-}
 
 
 bool Stand_PID::is_locked() {
