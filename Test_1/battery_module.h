@@ -24,6 +24,9 @@ class Stand_Battery {
 
         float percentage_4S(float voltage);
 
+        float percentage_3S(float voltage);
+
+        float percentage_3S_under_load(float voltage);
 
     
     private:

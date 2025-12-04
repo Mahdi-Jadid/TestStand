@@ -45,6 +45,47 @@ float Stand_Battery::percentage_4S(float voltage) {
   return percent;
 }
 
+float Stand_Battery::percentage_3S(float voltage) {
+  float percent;
+
+  if (voltage >= 12.6) percent = 100;     // fully charged
+  else if (voltage >= 12.3) percent = 95;
+  else if (voltage >= 12.0) percent = 90;
+  else if (voltage >= 11.7) percent = 85;
+  else if (voltage >= 11.4) percent = 80;
+  else if (voltage >= 11.1) percent = 70;
+  else if (voltage >= 10.8) percent = 60;
+  else if (voltage >= 10.5) percent = 50;
+  else if (voltage >= 10.2) percent = 40;
+  else if (voltage >= 10.0) percent = 30;
+  else if (voltage >= 9.8)  percent = 20;
+  else if (voltage >= 9.6)  percent = 10;
+  else percent = 0;                        // dangerously low
+
+  return percent;
+}
+
+
+float Stand_Battery::percentage_3S_under_load(float voltage) {
+    float percent;
+
+    if (voltage >= 12.0) percent = 100;     // fully charged under load
+    else if (voltage >= 11.7) percent = 95;
+    else if (voltage >= 11.4) percent = 90;
+    else if (voltage >= 11.1) percent = 85;
+    else if (voltage >= 10.8) percent = 80;
+    else if (voltage >= 10.6) percent = 70;
+    else if (voltage >= 10.4) percent = 60;
+    else if (voltage >= 10.2) percent = 50;
+    else if (voltage >= 10.0) percent = 40;
+    else if (voltage >= 9.9)  percent = 30;
+    else if (voltage >= 9.8)  percent = 20;
+    else if (voltage >= 9.7)  percent = 10;
+    else percent = 0;                        // dangerously low under load
+
+    return percent;
+}
+
 
 
 /*void loop() {

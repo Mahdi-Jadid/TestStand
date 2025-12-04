@@ -25,16 +25,17 @@ class Stand_PID {
 
         void csv_log(unsigned long max_log_count = 0);
 
-        void csv_log(Stand_Battery* battery);
+        void csv_log(Stand_Battery * battery)
 
         float update_windowed_average(float new_value);
-float current_windowed_average = 0.0f;
+
+        float current_windowed_average = 0.0f;
+
         private:
 
             void reset_bools();
 
-            
-
+        
             void update_current_stats(Stand_ACS* stand_acs);
 
             double current_input; 
@@ -44,7 +45,7 @@ float current_windowed_average = 0.0f;
             PID current_pid;
 
            // ---------- Moving-average filter (0.5 s at 10 Hz = 5 samples) ----------
-                static constexpr uint8_t WINDOW_SIZE = 10;
+                static constexpr uint8_t WINDOW_SIZE = 5;
                 float values_in_window[WINDOW_SIZE] = {};   // zero-initialize
                 uint8_t window_index = 0;
                 uint8_t window_count = 0;
@@ -74,6 +75,7 @@ float current_windowed_average = 0.0f;
 
                 unsigned long log_count = 0;
 
-                const int BUZZER_PIN;
+                const int LED_PIN;
+                unsigned long max_log = 0;
 };
 

@@ -25,14 +25,17 @@ class Stand_PID {
 
         void csv_log(unsigned long max_log_count = 0);
 
+        void csv_log(Stand_Battery * battery)
+
         float update_windowed_average(float new_value);
-float current_windowed_average = 0.0f;
+
+        float current_windowed_average = 0.0f;
+
         private:
 
             void reset_bools();
 
-            
-
+        
             void update_current_stats(Stand_ACS* stand_acs);
 
             double current_input; 
@@ -72,6 +75,7 @@ float current_windowed_average = 0.0f;
 
                 unsigned long log_count = 0;
 
-                const int BUZZER_PIN;
+                const int LED_PIN;
+                unsigned long max_log = 0;
 };
 

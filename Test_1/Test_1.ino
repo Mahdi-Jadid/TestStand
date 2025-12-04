@@ -57,7 +57,7 @@ void loop() {
     Serial.print(stand_esc.get_throttle_angle());
     Serial.println();
   }
-  stand_pid.csv_log(2000UL);
+  stand_pid.csv_log(1000UL);
 
   delay(100);
 }

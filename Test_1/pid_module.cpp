@@ -4,12 +4,12 @@
 
 Stand_PID::Stand_PID(double Kp, double Ki, double Kd)
     : current_pid(&current_input, &current_output, &current_setpoint, Kp, Ki, Kd, DIRECT),
-      PENALTY_COEFFICIENT(0.002f),
-      LOOP_DT(0.1f),
-      BUZZER_PIN(10)
+      PENALTY_COEFFICIENT{0.002f},
+      LOOP_DT{0.1f},
+      LED_PIN{10}
 {
-  pinMode(BUZZER_PIN, OUTPUT);
-  digitalWrite(BUZZER_PIN, LOW);
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
 }
 
 
@@ -66,12 +66,6 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
     }
     else {
 
-    //  if (current_windowed_average < (current_setpoint - 0.50)) {
-      //   preSeek = true;
-        // return;
-      //}
-        
-
       current_input = (double)current_windowed_average;             // use 0.5 s avg for PID
       current_pid.Compute();
 
@@ -84,7 +78,7 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
 
       // lock when avg is just under current_setpoint
       if ( window_count == WINDOW_SIZE &&
-          current_windowed_average >= (current_setpoint - 0.05) &&
+          current_windowed_average >= (current_setpoint - 0.1) &&  // 0.05
           current_windowed_average <= current_setpoint)
       {
          nearCount++;
@@ -99,8 +93,11 @@ void Stand_PID:: monitor_and_compute (Stand_ESC* stand_esc, Stand_ACS* stand_acs
     }
   }
   else {
-    if  (current_windowed_average < (current_setpoint - 0.05)) { 
+    if  (current_windowed_average < (current_setpoint - 0.1)) { 
        pwmLocked = false;
+       if (max_log > 0)
+          if (log_count >= max_log)
+              log_count = 0;
        return;
     }
 
@@ -164,40 +161,99 @@ void Stand_PID::set_setpoint(double setpoint) {
 
 void Stand_PID::csv_log(unsigned long max_log_count) {
 
+  max_log = max_log_count;
+
   if (max_log_count != 0)
     if (log_count >= max_log_count && pwmLocked) {
-        digitalWrite(BUZZER_PIN, HIGH); // Buzzer will sound if data for one air speed is done logging and no further logs collected
+        digitalWrite(LED_PIN, HIGH); 
         return;
     }
 
   // 5) CSV log:
   
   if (pwmLocked) {
-   Serial.print(now_ms);
+
+    if (log_count == 0) {
+        Serial.println();
+        Serial.println();
+        Serial.println("=============== NEW DATA SET =============");
+        Serial.println();
+        Serial.println();
+    }
+      
+  Serial.print(now_ms);
   Serial.print(", ");
   Serial.print(lockedAngle);
-  Serial.print(", ");
-  Serial.print(current_instant, 3);
   Serial.print(", ");
   Serial.print(current_windowed_average, 3);
   Serial.print(", ");
   Serial.print(current_long_time_average, 3);
- // Serial.print(", ");
-  //Serial.print(current_setpoint, 3);
-  //Serial.print(", ");
- // Serial.print( pwmLocked ? 1 : 0);
-  //Serial.print(", ");
-  //Serial.print(penalty_points, 3);
-
-    // Serial.print(", ");
-    // Serial.print(loadcell_thrust, 2);
-     log_count++;
+  Serial.print(", ");
+  Serial.print(loadcell_thrust, 2);
+  Serial.print(", ");
+  Serial.print(penalty_points, 3);
+  
+  log_count++;
   }
 
   Serial.println();
 
 
 }
+
+void Stand_PID::csv_log(Stand_Battery * battery) {
+
+  // 5) CSV log:
+   max_log = max_log_count;
+
+  if (max_log_count != 0)
+    if (log_count >= max_log_count && pwmLocked) {
+        digitalWrite(LED_PIN, HIGH); 
+        return;
+    }
+
+  auto voltage = battery->read_voltage();
+  auto percent = battery->percentage_3S(voltage); 
+
+  // 5) CSV log:
+  
+  if (pwmLocked) {
+
+    if (log_count == 0) {
+        Serial.println();
+        Serial.println();
+        Serial.println("=============== NEW DATA SET =============");
+        Serial.println();
+        Serial.println();
+    }
+      
+  Serial.print(now_ms);
+  Serial.print(", ");
+  Serial.print(lockedAngle);
+  Serial.print(", ");
+  Serial.print(current_windowed_average, 3);
+  Serial.print(", ");
+  Serial.print(current_long_time_average, 3);
+  Serial.print(", ");
+  Serial.print(loadcell_thrust, 2);
+  Serial.print(", ");
+  Serial.print(penalty_points, 3);
+  
+  log_count++;
+  }
+
+  Serial.println();
+
+ 
+  }
+
+  Serial.println();
+
+
+
+
+}
+
 
 bool Stand_PID::is_locked() {
   return pwmLocked;
