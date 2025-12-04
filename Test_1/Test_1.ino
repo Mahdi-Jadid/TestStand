@@ -50,13 +50,6 @@ void loop() {
 
   stand_loadcell.update();
 
-  if (!stand_pid.is_locked()) {
-    Serial.println();
-    Serial.print(stand_pid.current_windowed_average);
-    Serial.print(", ");
-    Serial.print(stand_esc.get_throttle_angle());
-    Serial.println();
-  }
   stand_pid.csv_log(1000UL);
 
   delay(100);

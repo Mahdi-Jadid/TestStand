@@ -25,7 +25,7 @@ class Stand_PID {
 
         void csv_log(unsigned long max_log_count = 0);
 
-        void csv_log(Stand_Battery * battery)
+        void csv_log(Stand_Battery * battery);
 
         float update_windowed_average(float new_value);
 
