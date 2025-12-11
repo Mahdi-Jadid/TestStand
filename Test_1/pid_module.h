@@ -31,11 +31,19 @@ class Stand_PID {
 
         float current_windowed_average = 0.0f;
 
+        bool log_finished = false;    
+        unsigned long led_last_toggle = 0;
+        const unsigned long LED_BLINK_INTERVAL = 200; // ms
+        const int LED_PIN;
+
         private:
 
             void reset_bools();
 
-        
+            int nearCount;
+            int farCount;
+            const int FAR_REQUIRED;
+
             void update_current_stats(Stand_ACS* stand_acs);
 
             double current_input; 
@@ -54,7 +62,6 @@ class Stand_PID {
                 // ---------- Locking (value seeker) ----------
                 bool pwmLocked = false;
                 int lockedAngle = ESC_MIN_ANGLE;
-                uint8_t nearCount = 0;
 
                 // fast coarse seek before PID
                 bool preSeek = true;    
@@ -75,7 +82,6 @@ class Stand_PID {
 
                 unsigned long log_count = 0;
 
-                const int LED_PIN;
                 unsigned long max_log = 0;
 };
 

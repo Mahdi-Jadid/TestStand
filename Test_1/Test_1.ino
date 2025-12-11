@@ -13,9 +13,9 @@ Stand_ESC stand_esc(9);
 Stand_ACS stand_acs(A1, ACS712_30A);
 
  // Tuning
-        double Kp = 4.0; // 1.8
-        double Ki = 2.5; // 2.2
-        double Kd = 0.2; // 0.2
+        double Kp = 1.5; // 1.8
+        double Ki = 1; // 2.2
+        double Kd = 0; // 0.2
 
        
 Stand_PID stand_pid(Kp, Ki, Kd);
@@ -37,7 +37,7 @@ void setup()
 
   stand_pid.start(&stand_acs);
 
-  stand_pid.set_setpoint(1);
+  stand_pid.set_setpoint(14.9);
 
   Serial.println("Ready.");
   
@@ -50,7 +50,16 @@ void loop() {
 
   stand_loadcell.update();
 
-  stand_pid.csv_log(500UL);
+  stand_pid.csv_log(200UL);
+
+  // --------- LED blink after logging 500 ---------
+  if (stand_pid.log_finished) {
+      unsigned long now = millis();
+      if (now - stand_pid.led_last_toggle >= stand_pid.LED_BLINK_INTERVAL) {
+          digitalWrite(stand_pid.LED_PIN, !digitalRead(stand_pid.LED_PIN)); // toggle LED
+          stand_pid.led_last_toggle = now;
+      }
+  }
 
   delay(100);
 }
