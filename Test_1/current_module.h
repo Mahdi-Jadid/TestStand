@@ -8,6 +8,7 @@
 #define ACS712_5A 185.0
 #define ACS712_20A 100.0
 #define ACS712_30A 66.0
+#define QNHCK2_100A_625mV 6.25   // 0.625 V / 100 A
 
 // Representative class for our test stand's ACS712
 class Stand_ACS {
@@ -15,7 +16,7 @@ class Stand_ACS {
         public:
 
             // Constructor that that takes the analog pin, and the type of ACS712
-            Stand_ACS(uint8_t analog_pin = A1, float type = ACS712_30A); 
+            Stand_ACS(uint8_t analog_pin = A1, float type = QNHCK2_100A_625mV);
 
             // Does Midpoint and stuff
             void start();
